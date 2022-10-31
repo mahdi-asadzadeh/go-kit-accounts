@@ -1,9 +1,9 @@
 package endpoint
 
 type CreateUserRequest struct {
-	Email    string `json:"email"`
-	FullName string `json:"full_name"`
-	Password string `json:"password"`
+	Email    string `form:"email" json:"email"`
+	FullName string `form:"full_name" json:"full_name"`
+	Password string `form:"password" json:"password"`
 }
 
 type CreateUserResponse struct {
@@ -14,7 +14,7 @@ type CreateUserResponse struct {
 }
 
 type DeleteUserRequest struct {
-	Email string `json:"email"`
+	Email string `form:"email" json:"email"`
 }
 
 type DeleteUserResponse struct {
@@ -23,7 +23,7 @@ type DeleteUserResponse struct {
 }
 
 type GetUserRequest struct {
-	Email string `json:"email"`
+	Email string `form:"email" json:"email"`
 }
 
 type GetUserResponse struct {
@@ -34,8 +34,8 @@ type GetUserResponse struct {
 }
 
 type UpdateUserRequest struct {
-	Email    string `json:"email"`
-	FullName string `json:"full_name"`
+	Email    string `form:"email" json:"email"`
+	FullName string `form:"full_name" json:"full_name"`
 }
 
 type UpdateUserResponse struct {
@@ -46,8 +46,8 @@ type UpdateUserResponse struct {
 }
 
 type LoginUserRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `form:"email" json:"email"`
+	Password string `form:"password" json:"password"`
 }
 
 type LoginUserResponse struct {
