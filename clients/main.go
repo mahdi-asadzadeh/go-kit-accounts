@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"net/http"
 
+	docs "github.com/mahdi-asadzadeh/go-kit-accounts/clients/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
@@ -20,10 +23,10 @@ func main() {
 	HTTPCLI := HTTPClient{"http://0.0.0.0:8080"}
 
 	// gRPC client
-	GRPCCLI := gRPCClient{GrpcCli: InitUserServiceClient(":50051")}
+	GRPCCLI := gRPCClient{GrpcCli: InitUserServiceClient("50051")}
 
 	router := gin.Default()
-
+	docs.SwaggerInfo.BasePath = ""
 	// gRPC routes
 	router.POST("/grpc/register", GRPCCLI.GRPCCreateUser)
 	router.DELETE("/grpc/delete/:slug", GRPCCLI.GRPCDeleteUser)
@@ -37,6 +40,8 @@ func main() {
 	router.PUT("/http/update", HTTPCLI.HTTPUpdateUser)
 	router.POST("/http/login", HTTPCLI.HTTPLoginUser)
 	router.GET("/http/get/:slug", HTTPCLI.HTTPGetUser)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router.Run(":8081")
 }
@@ -64,6 +69,15 @@ type HTTPClient struct {
 
 // ********************* gRPC *********************
 
+// @Summary Create an user
+// @Description Create an user
+// @Tags gRPC client
+// @Accept  json
+// @Produce  json
+// @Param request body types.CreateUserInput true "User"
+// @Success 200 {object} types.CreateUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /grpc/register [POST]
 func (gcli *gRPCClient) GRPCCreateUser(ctx *gin.Context) {
 	var input types.CreateUserInput
 
@@ -81,6 +95,15 @@ func (gcli *gRPCClient) GRPCCreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, result)
 }
 
+// @Summary Delete user by slug
+// @Description Delete user by slug
+// @Tags gRPC client
+// @Accept  json
+// @Produce  json
+// @Param slug path string true "slug"
+// @Success 200 {object} types.DeleteUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /grpc/delete/{slug} [DELETE]
 func (gcli *gRPCClient) GRPCDeleteUser(ctx *gin.Context) {
 	email := ctx.Param("slug")
 	req := pb.DeleteUserRequest{Email: email}
@@ -93,6 +116,15 @@ func (gcli *gRPCClient) GRPCDeleteUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Update an user
+// @Description Update an user
+// @Tags gRPC client
+// @Accept  json
+// @Produce  json
+// @Param request body types.UpdateUserInput true "User"
+// @Success 200 {object} types.UpdateUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /grpc/update [PUT]
 func (gcli *gRPCClient) GRPCUpdateUser(ctx *gin.Context) {
 	var input types.UpdateUserInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -109,6 +141,15 @@ func (gcli *gRPCClient) GRPCUpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Login an user
+// @Description Login an user
+// @Tags gRPC client
+// @Accept  json
+// @Produce  json
+// @Param request body types.LoginUserInput true "User"
+// @Success 200 {object} types.LoginUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /grpc/login [POST]
 func (gcli *gRPCClient) GRPCLoginUser(ctx *gin.Context) {
 	var input types.LoginUserInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -125,6 +166,15 @@ func (gcli *gRPCClient) GRPCLoginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Detail user by slug
+// @Description Detail article by slug
+// @Tags gRPC client
+// @Accept json
+// @Product json
+// @Param slug path string true "slug"
+// @Success 200 {object} types.GetUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /grpc/get/{slug} [GET]
 func (gcli *gRPCClient) GRPCGetUser(ctx *gin.Context) {
 	email := ctx.Param("slug")
 
@@ -140,6 +190,15 @@ func (gcli *gRPCClient) GRPCGetUser(ctx *gin.Context) {
 
 // ********************* HTTP *********************
 
+// @Summary Detail user by slug
+// @Description Detail article by slug
+// @Tags HTTP client
+// @Accept json
+// @Product json
+// @Param slug path string true "slug"
+// @Success 200 {object} types.GetUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /http/get/{slug} [GET]
 func (hcli *HTTPClient) HTTPGetUser(ctx *gin.Context) {
 	email := ctx.Param("slug")
 
@@ -158,6 +217,15 @@ func (hcli *HTTPClient) HTTPGetUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Create an user
+// @Description Create an user
+// @Tags HTTP client
+// @Accept  json
+// @Produce  json
+// @Param request body types.CreateUserInput true "User"
+// @Success 200 {object} types.CreateUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /http/register [POST]
 func (hcli *HTTPClient) HTTPCreateUser(ctx *gin.Context) {
 	var input types.CreateUserInput
 
@@ -187,6 +255,15 @@ func (hcli *HTTPClient) HTTPCreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, result)
 }
 
+// @Summary Delete user by slug
+// @Description Delete user by slug
+// @Tags HTTP client
+// @Accept  json
+// @Produce  json
+// @Param slug path string true "slug"
+// @Success 200 {object} types.DeleteUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /http/delete/{slug} [DELETE]
 func (hcli *HTTPClient) HTTPDeleteUser(ctx *gin.Context) {
 	email := ctx.Param("slug")
 	client := http.Client{}
@@ -208,6 +285,15 @@ func (hcli *HTTPClient) HTTPDeleteUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Update an user
+// @Description Update an user
+// @Tags HTTP client
+// @Accept  json
+// @Produce  json
+// @Param request body types.UpdateUserInput true "User"
+// @Success 200 {object} types.UpdateUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Router /http/update [PUT]
 func (hcli *HTTPClient) HTTPUpdateUser(ctx *gin.Context) {
 
 	var input types.UpdateUserInput
@@ -236,6 +322,16 @@ func (hcli *HTTPClient) HTTPUpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary Login an user
+// @Description Login an user
+// @Tags HTTP client
+// @Accept  json
+// @Produce  json
+// @Param request body types.LoginUserInput true "User"
+// @Success 200 {object} types.LoginUserResponse
+// @Failure 400 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Router /http/login [POST]
 func (hcli *HTTPClient) HTTPLoginUser(ctx *gin.Context) {
 	var input types.LoginUserInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
