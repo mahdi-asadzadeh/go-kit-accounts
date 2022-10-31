@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  server:
+    container_name: server_accounts
+    networks:
+      - main
+    build: .
+    command: go run cmd/main.go -mode=pro
+    ports: 
+      - 8080:8080
+      - 50051:50051
+    restart: on-failure
+    volumes:
+      - .:/server_accounts
+    depends_on:
+      - db
+  
+  client:
+    container_name: client_accounts
+    networks:
+      - main
+    build: .
+    command: go run clients/main.go
+    ports: 
+      - 8081:8081
+    restart: on-failure
+    volumes:
+      - .:/client_accounts
+    depends_on:
+      - db
+      - server
+       
+  db:
+    image: postgres
+    networks:
+      - main
+    container_name: db_accounts
+    environment:
+      - POSTGRES_USER=accounts
+      - POSTGRES_PASSWORD=accounts
+      - POSTGRES_DB=accounts
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+
+networks:
+  main:
+    external: true
+
+volumes:
+  database_postgres:
+    external: true
+    

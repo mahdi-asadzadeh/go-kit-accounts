@@ -1,0 +1,329 @@
+definitions:
+  types.CreateUserInput:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+    type: object
+  types.CreateUserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  types.DeleteUserResponse:
+    properties:
+      ok:
+        type: boolean
+    type: object
+  types.ErrorResponse:
+    properties:
+      error: {}
+      method:
+        type: string
+      statuscode:
+        type: integer
+    type: object
+  types.GetUserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  types.LoginUserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  types.LoginUserResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  types.UpdateUserInput:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+    type: object
+  types.UpdateUserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /grpc/delete/{slug}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user by slug
+      parameters:
+      - description: slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DeleteUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Delete user by slug
+      tags:
+      - gRPC client
+  /grpc/get/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Detail article by slug
+      parameters:
+      - description: slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Detail user by slug
+      tags:
+      - gRPC client
+  /grpc/login:
+    post:
+      consumes:
+      - application/json
+      description: Login an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.LoginUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.LoginUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Login an user
+      tags:
+      - gRPC client
+  /grpc/register:
+    post:
+      consumes:
+      - application/json
+      description: Create an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Create an user
+      tags:
+      - gRPC client
+  /grpc/update:
+    put:
+      consumes:
+      - application/json
+      description: Update an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.UpdateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UpdateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Update an user
+      tags:
+      - gRPC client
+  /http/delete/{slug}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user by slug
+      parameters:
+      - description: slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DeleteUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Delete user by slug
+      tags:
+      - HTTP client
+  /http/get/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Detail article by slug
+      parameters:
+      - description: slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Detail user by slug
+      tags:
+      - HTTP client
+  /http/login:
+    post:
+      consumes:
+      - application/json
+      description: Login an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.LoginUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.LoginUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Login an user
+      tags:
+      - HTTP client
+  /http/register:
+    post:
+      consumes:
+      - application/json
+      description: Create an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Create an user
+      tags:
+      - HTTP client
+  /http/update:
+    put:
+      consumes:
+      - application/json
+      description: Update an user
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.UpdateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UpdateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResponse'
+      summary: Update an user
+      tags:
+      - HTTP client
+swagger: "2.0"
