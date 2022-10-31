@@ -39,6 +39,8 @@ http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/i
    #### Swagger API
 
 http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/index.html/)
+![annual_sales](images/swagger.png)
+
 
 ## Architecture:
 
