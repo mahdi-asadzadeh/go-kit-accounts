@@ -26,21 +26,24 @@ http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/i
   
    #### create volume
 
-    docker volume create postgres_data
+    $ docker volume create postgres_data
    
    #### create network
    
-    docker network create main
+    $ docker network create main
    
    #### run service 
  
-    docker-compose up -d --build
+    $ docker-compose up -d --build
 
    #### Swagger API
 
 http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/index.html/)
 ![annual_sales](images/swagger.png)
 
+## Test proejct:
+
+    $ go test ./pkg/tests -v
 
 ## Architecture:
 
