@@ -1,29 +1,44 @@
 # About The Project
 Example golang using GO-KIT framework everything you need :)
 
-## Installation:
-   ### Prerequisites
+## Installation(manually):
+
+   #### run server
+
+    go run cmd/main.go
+
+
+   #### run client
+
+    go run clients/main.go
+    
+   #### Swagger API
+
+http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/index.html)
+
+## Installation(docker):
+   #### Prerequisites
    - docker
       for download docker in [link](https://docs.docker.com/engine/install/)
 
    - docker-compose
       for download docker in [link](https://docs.docker.com/compose/install/)
   
-   ### create volume
+   #### create volume
 
     docker volume create postgres_data
    
-   ### create network
+   #######create network
    
     docker network create main
    
-   ### run service 
+   #### run service 
  
     docker-compose up -d --build
 
-   ### Swagger API
+   #### Swagger API
 
-http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/index.html)
+http://localhost:8081/swagger/index.html/ [link](http://localhost:8081/swagger/index.html/)
 
 ## Architecture:
 
