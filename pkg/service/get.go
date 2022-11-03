@@ -12,5 +12,5 @@ func (usrSer *UserService) GetUser(email string) (usr *models.User, err error) {
 		return nil, errors.NotFound404
 	}
 	usr = &user
-	return usr, err
+	return usr, nil
 }

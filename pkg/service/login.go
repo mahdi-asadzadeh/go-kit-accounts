@@ -7,12 +7,12 @@ import (
 func (usrSer *UserService) LoginUser(email string, password string) (token string, err error) {
 	user, err := usrSer.GetUser(email)
 	if err != nil {
-		return "", err
+		return "", errors.NotFound404
 	}
 	err = user.IsValidPassword(password)
 	if err != nil {
-		return "", errors.BadRequest400
+		return "", errors.NotFound404
 	}
 	token = user.GenerateJwtToken(usrSer.JwtSecret)
-	return token, err
+	return token, nil
 }

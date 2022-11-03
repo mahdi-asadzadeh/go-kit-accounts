@@ -1,33 +1,22 @@
 package tests
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/mahdi-asadzadeh/go-kit-accounts/pkg/service"
-	"github.com/mahdi-asadzadeh/go-kit-accounts/pkg/service/models"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func TestUserService(t *testing.T) {
-	var db *gorm.DB
-	JWTSECRET := "cHV87ewyuopvdXJh5rt8YXJ0ZWFjaGFuY2llbnRjb3JyZWN0bHlmZWxsb3dhcm1xdWE="
-	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	db.Debug().AutoMigrate(&models.User{})
-	userSer := service.NewUserService(JWTSECRET, db)
-
+	// Implement user data
 	email := uuid.New().String()
 	fullName := uuid.New().String()
 	password := uuid.New().String()
 	var userID uint
 	var updateFullName string
 
-	t.Run("Create user", func(t *testing.T) {
+	userSer := testCommon.UserSer
+
+	t.Run("create-user", func(t *testing.T) {
 		newUser, err := userSer.CreateUser(email, fullName, password)
 		userID = newUser.ID
 
@@ -35,11 +24,11 @@ func TestUserService(t *testing.T) {
 			t.Errorf("[Create user]: expected %v received %v", nil, err)
 		}
 		if newUser.Email != email {
-			t.Errorf("got %q, wanted %q", newUser.Email, email)
+			t.Errorf("got %s, wanted %s", newUser.Email, email)
 		}
 	})
 
-	t.Run("Get user", func(t *testing.T) {
+	t.Run("get-user", func(t *testing.T) {
 		user, err := userSer.GetUser(email)
 
 		if err != nil {
@@ -56,7 +45,7 @@ func TestUserService(t *testing.T) {
 		}
 	})
 
-	t.Run("Update user", func(t *testing.T) {
+	t.Run("update-user", func(t *testing.T) {
 		updateFullName = "My test"
 		user, err := userSer.UpdateUser(email, updateFullName)
 
@@ -64,11 +53,11 @@ func TestUserService(t *testing.T) {
 			t.Errorf("[Update user]: expected %v received %v", nil, err)
 		}
 		if user.FullName != updateFullName {
-			t.Errorf("[Update user full name]: got %q, wanted %q", user.FullName, updateFullName)
+			t.Errorf("[Update user full name]: got %s, wanted %s", user.FullName, updateFullName)
 		}
 	})
 
-	t.Run("Delete user", func(t *testing.T) {
+	t.Run("delete-user", func(t *testing.T) {
 		ok, err := userSer.DeleteUser(email)
 
 		if err != nil {

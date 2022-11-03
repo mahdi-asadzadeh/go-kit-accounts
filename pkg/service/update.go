@@ -16,5 +16,5 @@ func (usrSer *UserService) UpdateUser(email string, fullName string) (usr *model
 	}
 	getUser.FullName = fullName
 	usr = getUser
-	return usr, err
+	return usr, nil
 }

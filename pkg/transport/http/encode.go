@@ -28,7 +28,7 @@ func codeFrom(err error) int {
 	case errors.NotFound404:
 		return http.StatusNotFound
 	case errors.BadRequest400:
-	    return http.StatusBadRequest
+		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
 	}
