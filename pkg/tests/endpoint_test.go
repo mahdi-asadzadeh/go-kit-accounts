@@ -18,8 +18,6 @@ func TestUserEndpoint(t *testing.T) {
 	email := uuid.New().String()
 	fullName := uuid.New().String()
 	password := uuid.New().String()
-	// var userID uint
-	// var updateFullName string
 	var db *gorm.DB
 
 	JWTSECRET := "cHV87ewyuopvdXJh5rt8YXJ0ZWFjaGFuY2llbnRjb3JyZWN0bHlmZWxsb3dhcm1xdWE="

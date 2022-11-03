@@ -13,6 +13,6 @@ func (userEnd *UserEndpoint) LoginEndpoint() endpoint.Endpoint {
 		if err != nil {
 			return LoginUserResponse{"", err.Error()}, err
 		}
-		return LoginUserResponse{token, ""}, err
+		return LoginUserResponse{token, ""}, nil
 	}
 }

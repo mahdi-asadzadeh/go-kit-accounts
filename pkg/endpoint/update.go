@@ -13,6 +13,6 @@ func (userEnd *UserEndpoint) UpdateUserEndpoint() endpoint.Endpoint {
 		if err != nil {
 			return UpdateUserResponse{0, "", "", err.Error()}, err
 		}
-		return UpdateUserResponse{usr.ID, usr.Email, usr.FullName, ""}, err
+		return UpdateUserResponse{usr.ID, usr.Email, usr.FullName, ""}, nil
 	}
 }

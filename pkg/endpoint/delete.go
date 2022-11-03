@@ -13,6 +13,6 @@ func (userEnd *UserEndpoint) DeleteUserEndpoint() endpoint.Endpoint {
 		if err != nil {
 			return DeleteUserResponse{ok, err.Error()}, err
 		}
-		return DeleteUserResponse{ok, ""}, err
+		return DeleteUserResponse{ok, ""}, nil
 	}
 }

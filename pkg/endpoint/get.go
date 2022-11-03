@@ -13,6 +13,6 @@ func (userEnd *UserEndpoint) GetUserEndpoint() endpoint.Endpoint {
 		if err != nil {
 			return GetUserResponse{0, "", "", err.Error()}, err
 		}
-		return GetUserResponse{usr.ID, usr.Email, usr.FullName, ""}, err
+		return GetUserResponse{usr.ID, usr.Email, usr.FullName, ""}, nil
 	}
 }

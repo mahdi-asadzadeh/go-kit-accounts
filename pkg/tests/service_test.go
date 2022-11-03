@@ -35,7 +35,7 @@ func TestUserService(t *testing.T) {
 			t.Errorf("[Create user]: expected %v received %v", nil, err)
 		}
 		if newUser.Email != email {
-			t.Errorf("got %q, wanted %q", newUser.Email, email)
+			t.Errorf("got %s, wanted %s", newUser.Email, email)
 		}
 	})
 
@@ -64,7 +64,7 @@ func TestUserService(t *testing.T) {
 			t.Errorf("[Update user]: expected %v received %v", nil, err)
 		}
 		if user.FullName != updateFullName {
-			t.Errorf("[Update user full name]: got %q, wanted %q", user.FullName, updateFullName)
+			t.Errorf("[Update user full name]: got %s, wanted %s", user.FullName, updateFullName)
 		}
 	})
 

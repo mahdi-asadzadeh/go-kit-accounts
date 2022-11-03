@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/mahdi-asadzadeh/go-kit-accounts/pkg/errors"
 	"github.com/mahdi-asadzadeh/go-kit-accounts/pkg/service/models"
 )
 
@@ -9,7 +10,7 @@ func (usrSer *UserService) CreateUser(email string, fullName string, password st
 	newUser.Password = newUser.SetPassword(password)
 	err = usrSer.DB.Create(&newUser).Error
 	if err != nil {
-		return nil, err
+		return nil, errors.BadRequest400
 	}
 	return &newUser, nil
 }

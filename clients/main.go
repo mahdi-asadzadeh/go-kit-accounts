@@ -27,6 +27,7 @@ func main() {
 
 	router := gin.Default()
 	docs.SwaggerInfo.BasePath = ""
+
 	// gRPC routes
 	router.POST("/grpc/register", GRPCCLI.GRPCCreateUser)
 	router.DELETE("/grpc/delete/:slug", GRPCCLI.GRPCDeleteUser)
@@ -41,6 +42,7 @@ func main() {
 	router.POST("/http/login", HTTPCLI.HTTPLoginUser)
 	router.GET("/http/get/:slug", HTTPCLI.HTTPGetUser)
 
+	// Swagger document route
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router.Run(":8081")
@@ -203,12 +205,12 @@ func (hcli *HTTPClient) HTTPGetUser(ctx *gin.Context) {
 	email := ctx.Param("slug")
 
 	response, err := http.Get(hcli.ClientURL + "/v1/get?email=" + email)
-	if response.StatusCode == 404 {
-		ReturnError(ctx, 404, "GET", "Record not found.")
+	if err != nil {
+		ReturnError(ctx, 200, "GET", err.Error())
 		return
 	}
-	if err != nil {
-		ReturnError(ctx, response.StatusCode, "GET", err.Error())
+	if response.StatusCode == 404 {
+		ReturnError(ctx, 404, "GET", "Record not found.")
 		return
 	}
 
@@ -230,23 +232,23 @@ func (hcli *HTTPClient) HTTPCreateUser(ctx *gin.Context) {
 	var input types.CreateUserInput
 
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ReturnError(ctx, http.StatusBadRequest, "POST", err.Error())
+		ReturnError(ctx, 400, "POST", err.Error())
 		return
 	}
-	fmt.Println(input)
+
 	json_data, err := json.Marshal(&input)
 	if err != nil {
-		ReturnError(ctx, http.StatusBadRequest, "POST", err.Error())
+		ReturnError(ctx, 400, "POST", err.Error())
 		return
 	}
 
 	response, err := http.Post(hcli.ClientURL+"/v1/register", "application/json", bytes.NewBuffer(json_data))
-	if response.StatusCode == 500 {
-		ReturnError(ctx, http.StatusInternalServerError, "POST", "")
+	if err != nil {
+		ReturnError(ctx, 400, "POST", err.Error())
 		return
 	}
-	if err != nil {
-		ReturnError(ctx, http.StatusBadRequest, "POST", err.Error())
+	if response.StatusCode == 400 {
+		ReturnError(ctx, 400, "POST", "Invalid data!")
 		return
 	}
 
@@ -269,14 +271,19 @@ func (hcli *HTTPClient) HTTPDeleteUser(ctx *gin.Context) {
 	client := http.Client{}
 	req, err := http.NewRequest("DELETE", hcli.ClientURL+"/v1/delete?email="+email, nil)
 	if err != nil {
-		ReturnError(ctx, http.StatusBadRequest, "DELETE", err.Error())
+		ReturnError(ctx, 400, "DELETE", err.Error())
 		return
 	}
 
 	// Fetch Request
 	response, err := client.Do(req)
 	if err != nil {
-		ReturnError(ctx, response.StatusCode, "DELETE", err.Error())
+		ReturnError(ctx, 400, "DELETE", err.Error())
+		return
+	}
+
+	if response.StatusCode == 404 {
+		ReturnError(ctx, 404, "DELETE", "Record not found!")
 		return
 	}
 
@@ -295,7 +302,6 @@ func (hcli *HTTPClient) HTTPDeleteUser(ctx *gin.Context) {
 // @Failure 400 {object} types.ErrorResponse
 // @Router /http/update [PUT]
 func (hcli *HTTPClient) HTTPUpdateUser(ctx *gin.Context) {
-
 	var input types.UpdateUserInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ReturnError(ctx, http.StatusBadRequest, "PUT", err.Error())
@@ -317,6 +323,15 @@ func (hcli *HTTPClient) HTTPUpdateUser(ctx *gin.Context) {
 		return
 	}
 
+	if response.StatusCode == 404 {
+		ReturnError(ctx, 404, "PUT", "Record not found!")
+		return
+	}
+
+	if response.StatusCode == 400 {
+		ReturnError(ctx, 400, "PUT", "Invalid data!")
+		return
+	}
 	var result types.UpdateUserInput
 	json.NewDecoder(response.Body).Decode(&result)
 	ctx.JSON(http.StatusOK, result)
@@ -340,12 +355,12 @@ func (hcli *HTTPClient) HTTPLoginUser(ctx *gin.Context) {
 	}
 	json_data, err := json.Marshal(&input)
 	response, err := http.Post(hcli.ClientURL+"/v1/login", "application/json", bytes.NewBuffer(json_data))
-	if response.StatusCode == 500 {
-		ReturnError(ctx, http.StatusInternalServerError, "POST", "")
-		return
-	}
 	if err != nil {
 		ReturnError(ctx, http.StatusBadRequest, "POST", err.Error())
+		return
+	}
+	if response.StatusCode == 404 {
+		ReturnError(ctx, 404, "POST", "Record not found!")
 		return
 	}
 

@@ -48,10 +48,6 @@ func NewGrpcUserServer(userEnd *endpoint.UserEndpoint, logger kitlog.Logger) pb.
 		),
 	}
 }
-// func (s *gRPCServer) mustEmbedUnimplementedUSerServiceServer(a string) int {
-// 	panic("fff")
-// 	return 1
-// }
 
 func (s *gRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	_, res, err := s.createUser.ServeGRPC(ctx, req)
